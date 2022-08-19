@@ -56,7 +56,7 @@ const SignInScreen = ({ navigation }) => {
           titleStyle={styles.buttonTextStyle}
           containerStyle={styles.buttonContainerStyle}
           onPress={() => {
-            register(userName, password);
+            navigation.navigate("userFlow");
           }}
         ></Button>
       </View>

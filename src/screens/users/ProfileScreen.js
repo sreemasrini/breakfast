@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Pressable } from "react-native";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Text, Button, Input, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-navigation";
 import ShowImage from "../../components/ShowImage";
+import UserContext from "../../context/UserContext";
 
 const ProfileScreen = ({ navigation }) => {
+  const { logout } = useContext(UserContext);
   return (
     <SafeAreaView
       forceInset={{ top: "always" }}
@@ -27,7 +29,11 @@ const ProfileScreen = ({ navigation }) => {
       >
         <Text style={ProfileScreenStyles.itemStyle}> View Orders</Text>
       </Pressable>
-      <Pressable>
+      <Pressable
+        onPress={() => {
+          logout();
+        }}
+      >
         <Text style={ProfileScreenStyles.itemStyle}>Sign Out</Text>
       </Pressable>
     </SafeAreaView>

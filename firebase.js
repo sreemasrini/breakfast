@@ -1,5 +1,17 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
+
+import {
+  getFirestore,
+  doc,
+  addDoc,
+  collection,
+  setDoc,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCi-DvR6Kbt3QA0kgNZXucgPNQJkupyvYs",
@@ -11,15 +23,32 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+const db = getFirestore(app);
 
-export const register = async (email, password) => {
-  console.log("here");
+export const register = async (email, password, username, mobileNo) => {
+  let success = false;
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     console.log(user);
+
+    await setDoc(doc(db, "userDetails", user.uid), {
+      name: username,
+      mobileno: mobileNo,
+    });
+
+    if (res) success = true;
   } catch (err) {
-    console.error(err);
     alert(err.message);
   }
+  return success;
+};
+
+export const validateUserEmail = async (email) => {
+  let emailExists = false;
+  await fetchSignInMethodsForEmail(auth, email).then((result) => {
+    emailExists = result.length > 0 ? true : false;
+  });
+
+  return emailExists;
 };

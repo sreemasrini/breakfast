@@ -23,7 +23,13 @@ const SignUpScreen = ({ navigation }) => {
 
   const handleError = (input, errorMsg) => {
     setErrorMsg((prevState) => ({ ...prevState, [input]: errorMsg }));
-    console.log(valid);
+  };
+
+  const signUpUser = async () => {
+    const success = await register(email, password, personName, mobileNo);
+    if (success) {
+      navigation.navigate("userFlow");
+    }
   };
   const confirmPasswordValidation = () => {
     Keyboard.dismiss();
@@ -31,32 +37,32 @@ const SignUpScreen = ({ navigation }) => {
     if (password !== confirmPassword) {
       handleError("confirmPasswordErrorMsg", "Passwords do not match");
       setValid(false);
+      setConfirmPassword("");
     } else {
       handleError("confirmPasswordErrorMsg", "");
       setValid(true);
     }
   };
 
-  const emailValidation = () => {
+  const emailValidation = async () => {
     Keyboard.dismiss();
     const result = validateEmail(email);
+
     if (!result) {
       handleError("emailErrorMsg", "Invalid E-mail id");
       setValid(false);
-      setConfirmPassword("");
     } else {
-      handleError("emailErrorMsg", "");
-      setValid(true);
+      const result2 = await validateUserEmail(email);
+      if (result2) {
+        handleError("emailErrorMsg", "Email is already registered");
+        setValid(false);
+      } else {
+        handleError("emailErrorMsg", "");
+        setValid(true);
+      }
     }
   };
 
-  const signUpUser = () => {
-    checkifEmailExists();
-  };
-
-  const checkifEmailExists = () => {
-    validateUserEmail(email);
-  };
   const mobileNoValidation = () => {
     Keyboard.dismiss();
     let reg = /^[6-9]\d{9}$/;
