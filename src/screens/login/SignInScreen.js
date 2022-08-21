@@ -1,33 +1,92 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, TouchableOpacity, Keyboard } from "react-native";
 import { Text, Button, Input, Icon } from "react-native-elements";
 
 import styles from "../../styles/elementStyles";
-import { auth } from "../../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, validateUserEmail, userLogIn } from "../../../firebase";
+
+import { validateEmail } from "./validations";
 
 const SignInScreen = ({ navigation }) => {
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const register = async (email, password) => {
-    console.log(email);
-    console.log(password);
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      const user = res.user;
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+  const [errorMsg, setErrorMsg] = useState({
+    emailErrorMsg: "",
+    passwordErrorMsg: "",
+    commonErrorMsg: "",
+  });
+  const [formValid, setValid] = useState(true);
+
+  const handleError = (input, error) => {
+    setErrorMsg((errorMsg) => ({ ...errorMsg, [input]: error }));
+  };
+
+  const emailValidation = async () => {
+    Keyboard.dismiss();
+    const result = validateEmail(email);
+    if (!result) {
+      handleError("emailErrorMsg", "Invalid E-mail id");
+      setValid(false);
+    } else {
+      const result2 = await validateUserEmail(email);
+      if (!result2) {
+        handleError("emailErrorMsg", "Email is not registered");
+        setValid(false);
+      } else {
+        handleError("emailErrorMsg", "");
+        setValid(true);
+        console.log("inside if");
+        console.log(formValid);
+      }
     }
+    console.log("email");
+    console.log(formValid);
+  };
+  const passwordValidation = () => {
+    Keyboard.dismiss();
+
+    if (password.length < 6) {
+      handleError("passwordErrorMsg", "Min Length 6 characters");
+      setValid(false);
+    } else {
+      handleError("passwordErrorMsg", "");
+      setValid(true);
+    }
+    console.log("password");
+    console.log(formValid);
+  };
+
+  const signInUser = async () => {
+    setValid(true);
+    console.log("here after setting");
+    console.log(formValid);
+    await emailValidation();
+    passwordValidation();
+    console.log("signin 2 times");
+
+    // if (formValid) {
+    const result = await userLogIn(email, password);
+    if (result === "") {
+      navigation.navigate("userFlow");
+    } else {
+      handleError("passwordErrorMsg", result);
+      setValid(false);
+      setPassword("");
+    }
+    // } else {
+    //   setPassword("");
+    // }
   };
   return (
     <View style={[styles.pageAlign, { marginBottom: 50 }]}>
       <Input
-        placeholder="Username"
+        placeholder="E-Mail"
         autoCapitalize="none"
         autoCorrect={false}
-        value={userName}
-        onChangeText={setUserName}
+        value={email}
+        onChangeText={setEmail}
+        errorMessage={errorMsg.emailErrorMsg}
+        errorStyle={styles.errorMsgStyle}
         leftIcon={
           <Icon name="user" type="feather" color={styles.iconStyle.color} />
         }
@@ -39,6 +98,8 @@ const SignInScreen = ({ navigation }) => {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        errorMessage={errorMsg.passwordErrorMsg}
+        errorStyle={styles.errorMsgStyle}
         leftIcon={
           <Icon name="key" type="feather" color={styles.iconStyle.color} />
         }
@@ -55,8 +116,10 @@ const SignInScreen = ({ navigation }) => {
           buttonStyle={styles.buttonView}
           titleStyle={styles.buttonTextStyle}
           containerStyle={styles.buttonContainerStyle}
+          disabled={email === "" || password === ""}
           onPress={() => {
-            navigation.navigate("userFlow");
+            signInUser();
+            //  navigation.navigate("userFlow");
           }}
         ></Button>
       </View>

@@ -68,7 +68,7 @@ const ProfileDetails = createStackNavigator({
 const navigator = createSwitchNavigator({
   loginFlow: createStackNavigator(
     {
-      SignIn: { screen: SignInScreen, navigationOptions: { title: "Sign In" } },
+      SignIn: { screen: SignInScreen, navigationOptions: { title: "" } },
       SignUp: {
         screen: SignUpScreen,
         navigationOptions: {
