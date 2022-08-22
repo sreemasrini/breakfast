@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { SafeAreaView } from "react-navigation";
 import { View, StyleSheet } from "react-native";
@@ -10,15 +10,16 @@ import foodTips from "../../../assets/foodTips";
 import { BottomSheet } from "react-native-elements";
 import QuickBookScreen from "./QuickBookScreen";
 import { Icon } from "react-native-elements/dist/icons/Icon";
+import UserContext from "../../context/UserContext";
 
 const UserMainPage = ({ navigation }) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-
+  const { user } = useContext(UserContext);
   const foodTip = foodTips[Math.floor(Math.random() * foodTips.length)];
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={commonStyles.viewStyle}>
       <ShowImage></ShowImage>
-      <Text style={commonStyles.headerText}>Hi Sriram,</Text>
+      <Text style={commonStyles.headerText}>Hi {user.userName},</Text>
       <View style={{ alignItems: "center" }}>
         <Text style={styles.quoteStyle}>{foodTip}</Text>
         <Button

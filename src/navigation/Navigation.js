@@ -16,26 +16,22 @@ import AccountDetailsScreen from "../screens/users/AccountDetailsScreen";
 import QuickBookScreen from "../screens/users/QuickBookScreen";
 import ActiveOrders from "../components/users/ActiveOrders";
 import PastOrders from "../components/users/PastOrders";
+import AdminScreen from "../screens/admin/AdminScreen";
 import { COLOURS } from "../styles/elementStyles";
+import UserContext from "../context/UserContext";
+import { useContext } from "react";
+import MenuForTheWeek from "../screens/admin/MenuForTheWeek";
+import SplashScreen from "../screens/SplashScreen";
+import MenuItems from "../screens/admin/MenuItems";
 
 const OrderBook = createMaterialTopTabNavigator(
   {
     ActiveOrders: {
       screen: ActiveOrders,
-      // navigationOptions: {
-      //   tabBarIcon: (tabInfo) => (
-      //     <Icon name="shopping-bag" type="feather" color={tabInfo.tintColor} />
-      //   ),
-      // },
     },
 
     PastOrders: {
       screen: PastOrders,
-      // navigationOptions: {
-      //   tabBarIcon: (tabInfo) => (
-      //     <Icon name="shopping-bag" type="feather" color={tabInfo.tintColor} />
-      //   ),
-      // },
     },
   },
   {
@@ -66,6 +62,22 @@ const ProfileDetails = createStackNavigator({
 });
 
 const navigator = createSwitchNavigator({
+  adminFlow: createStackNavigator({
+    AdminScreen: { screen: AdminScreen, navigationOptions: { title: "" } },
+    MenuForTheWeek: {
+      screen: MenuForTheWeek,
+      navigationOptions: {
+        title: "Menu for the week",
+      },
+    },
+    MenuItems: {
+      screen: MenuItems,
+      navigationOptions: {
+        title: "Menu Item",
+      },
+    },
+  }),
+  SplashScreen: SplashScreen,
   loginFlow: createStackNavigator(
     {
       SignIn: { screen: SignInScreen, navigationOptions: { title: "" } },
@@ -121,6 +133,7 @@ const navigator = createSwitchNavigator({
         },
       },
     },
+
     {
       initialRouteName: "Home",
       activeColor: "#59981A",

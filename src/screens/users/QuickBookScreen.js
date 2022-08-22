@@ -31,7 +31,7 @@ function QuickBookScreen() {
       </Text>
       <ScrollView>
         {menuForTheDay.map((item, index) => {
-          return <ItemCard item={item}></ItemCard>;
+          return <ItemCard item={item} key={index}></ItemCard>;
         })}
       </ScrollView>
     </View>

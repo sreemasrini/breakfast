@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, TouchableOpacity, Keyboard } from "react-native";
 import { Text, Button, Input, Icon } from "react-native-elements";
 
@@ -6,6 +6,7 @@ import styles from "../../styles/elementStyles";
 import { auth, validateUserEmail, userLogIn } from "../../../firebase";
 
 import { validateEmail } from "./validations";
+import UserContext from "../../context/UserContext";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ const SignInScreen = ({ navigation }) => {
     passwordErrorMsg: "",
     commonErrorMsg: "",
   });
+  const { login } = useContext(UserContext);
   const [formValid, setValid] = useState(true);
 
   const handleError = (input, error) => {

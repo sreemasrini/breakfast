@@ -32,6 +32,7 @@ const ProfileScreen = ({ navigation }) => {
       <Pressable
         onPress={() => {
           logout();
+          navigation.navigate("SignIn");
         }}
       >
         <Text style={ProfileScreenStyles.itemStyle}>Sign Out</Text>
