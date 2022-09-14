@@ -62,21 +62,21 @@ const ProfileDetails = createStackNavigator({
 });
 
 const navigator = createSwitchNavigator({
-  adminFlow: createStackNavigator({
-    AdminScreen: { screen: AdminScreen, navigationOptions: { title: "" } },
-    MenuForTheWeek: {
-      screen: MenuForTheWeek,
-      navigationOptions: {
-        title: "Menu for the week",
-      },
-    },
-    MenuItems: {
-      screen: MenuItems,
-      navigationOptions: {
-        title: "Menu Item",
-      },
-    },
-  }),
+  // adminFlow: createStackNavigator({
+  //   AdminScreen: { screen: AdminScreen, navigationOptions: { title: "" } },
+  //   MenuForTheWeek: {
+  //     screen: MenuForTheWeek,
+  //     navigationOptions: {
+  //       title: "Menu for the week",
+  //     },
+  //   },
+  //   MenuItems: {
+  //     screen: MenuItems,
+  //     navigationOptions: {
+  //       title: "Menu Item",
+  //     },
+  //   },
+  // }),
   SplashScreen: SplashScreen,
   loginFlow: createStackNavigator(
     {

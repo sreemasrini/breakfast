@@ -3,29 +3,32 @@ import React, { useContext, useEffect, useState } from "react";
 import { Pressable, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { View, Text, Button, FlatList, StyleSheet } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import UserContext from "../../context/UserContext";
-import styles, { COLOURS } from "../../styles/elementStyles";
+import { COLOURS } from "../../styles/elementStyles";
 
 import { addItemToMenu, getAllItemsInMenu } from "../../utils/utils";
 
 const MenuItems = ({ navigation }) => {
   const { menuItems, setMenuList } = useContext(UserContext);
 
-  const [addItem, setAddItem] = useState({ name: "", desc: "" });
+  const [addItem, setAddItem] = useState({ name: "", desc: "", category: 1 });
   const getItems = async () => {
     const list = await getAllItemsInMenu();
     setMenuList(list);
   };
+  const categoryList = [
+    { id: 1, name: "Breakfast" },
+    { id: 2, name: "Lunch" },
+    { id: 3, name: "Snacks" },
+  ];
   const [dialogEnabled, setEnabled] = useState(false);
 
-  // useEffect(() => {
-  //   getItems();
-  // }, []);
-
   const addMenu = async () => {
-    console.log(menuItems.length);
-    await addItemToMenu(addItem.name, addItem.desc, menuItems.length);
+    console.log(addItem.category);
+    const length = menuItems.length === 0 ? 0 : menuItems.length;
+    await addItemToMenu(addItem.name, addItem.desc, addItem.category, length);
     getItems();
     setAddItem({ name: "", desc: "" });
   };
@@ -70,6 +73,25 @@ const MenuItems = ({ navigation }) => {
               setAddItem({ ...addItem, desc: text });
             }}
           ></TextInput>
+          <Dropdown
+            data={categoryList}
+            style={{ borderWidth: 1, height: 40, margin: 10, padding: 9 }}
+            labelField="name"
+            valueField="id"
+            statusBarIsTranslucent={true}
+            selectedTextStyle={styles.textItem}
+            value={addItem.category}
+            onChange={(val) => {
+              setAddItem({ ...addItem, category: val });
+            }}
+            renderItem={(item) => {
+              return (
+                <View style={styles.item}>
+                  <Text style={styles.textItem}>{item.name}</Text>
+                </View>
+              );
+            }}
+          />
           <View style={{ width: 150 }}>
             <TouchableOpacity
               onPress={() => {
@@ -114,12 +136,13 @@ const MenuItems = ({ navigation }) => {
           }}
         >
           <View style={{ width: 180 }}>
-            <Text style={{ fontSize: 20, color: "white" }}>Item Name</Text>
+            <Text style={{ fontSize: 18, color: "white" }}>Item Name</Text>
           </View>
           <View style={{ width: 200 }}>
-            <Text style={{ fontSize: 20, color: "white" }}>Description</Text>
+            <Text style={{ fontSize: 18, color: "white" }}>Description</Text>
           </View>
         </View>
+
         <FlatList
           data={menuItems}
           key={(item) => {
@@ -136,14 +159,15 @@ const MenuItems = ({ navigation }) => {
                   alignItems: "center",
                 }}
               >
-                <View style={{ width: 30 }}>
-                  <Text style={{ fontSize: 20 }}>{index + 1}</Text>
-                </View>
                 <View style={{ width: 150 }}>
-                  <Text style={{ fontSize: 20 }}>{item.name}</Text>
+                  <Text style={{ fontSize: 16 }}>{item.name}</Text>
                 </View>
-                <View style={{ width: 200 }}>
-                  <Text style={{ fontSize: 18 }}>{item.desc}</Text>
+
+                <View style={{ width: 120 }}>
+                  <Text style={{ fontSize: 16 }}>{item.desc}</Text>
+                </View>
+                <View style={{ width: 70 }}>
+                  <Text style={{ fontSize: 15 }}>{item.category.name}</Text>
                 </View>
               </View>
             );
@@ -153,5 +177,20 @@ const MenuItems = ({ navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin: 2,
+    padding: 5,
+  },
+
+  textItem: {
+    paddingLeft: 5,
+    flex: 1,
+    fontSize: 16,
+  },
+});
 
 export default MenuItems;

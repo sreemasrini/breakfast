@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 
-const ItemCard = ({ item, orderCount }) => {
+const ItemCard = ({ item, orderCount, onCountChanged }) => {
   const [count, setCount] = useState(orderCount);
 
   return (
@@ -18,7 +18,7 @@ const ItemCard = ({ item, orderCount }) => {
       <View style={styles.containerStyle}>
         <View>
           <Text style={styles.titleStyle}>{item.name}</Text>
-          <Text style={styles.detailsStyle}>{item.description}</Text>
+          <Text style={styles.detailsStyle}>{item.desc}</Text>
         </View>
 
         <View style={styles.cartStyle}>
@@ -27,16 +27,22 @@ const ItemCard = ({ item, orderCount }) => {
             type="feather"
             color="white"
             onPress={() => {
-              if (count > 0) setCount(count - 1);
+              if (count > 0) {
+                const itemReduced = count - 1;
+                setCount(itemReduced);
+                onCountChanged(itemReduced);
+              }
             }}
           />
-          <Text style={{ color: "white", fontSize: 20 }}>{count}</Text>
+          <Text style={{ color: "white", fontSize: 18 }}>{count}</Text>
           <Icon
             name="plus"
             type="feather"
             color="white"
             onPress={() => {
-              setCount(count + 1);
+              const itemAdded = count + 1;
+              setCount(itemAdded);
+              onCountChanged(itemAdded);
             }}
           />
         </View>
@@ -48,13 +54,13 @@ const ItemCard = ({ item, orderCount }) => {
 const styles = StyleSheet.create({
   containerStyle: {
     flexDirection: "row",
-    margin: 5,
+    margin: 2,
     marginLeft: 25,
     justifyContent: "space-between",
     alignItems: "center",
   },
   titleStyle: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "600",
     color: "black",
   },
@@ -65,8 +71,8 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   cartStyle: {
-    height: 40,
-    width: 130,
+    height: 30,
+    width: 110,
     backgroundColor: "#81B622",
     borderRadius: 20,
     margin: 15,

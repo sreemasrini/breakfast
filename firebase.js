@@ -9,7 +9,15 @@ import {
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  query,
+  collection,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCi-DvR6Kbt3QA0kgNZXucgPNQJkupyvYs",
@@ -26,40 +34,49 @@ const auth = initializeAuth(app, {
 export const db = getFirestore(app);
 
 export const register = async (email, password, username, mobileNo) => {
-  let success = false;
+  let success = "";
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    console.log(user);
+    //console.log(user);
+    const q = query(collection(db, "user-details"));
+    const docs = await getDocs(q);
+    console.log(docs.length());
+    const userId = docs.length() === 0 ? "LS1" : "LS" + (docs.length() + 1);
 
-    const userAdded = await setDoc(doc(db, "userDetails", user.uid), {
+    await setDoc(doc(db, "user-details", user.uid), {
+      uid: userId,
       name: username,
       mobileno: mobileNo,
+    }).then(() => {
+      console.log(userId);
+      success = userId;
     });
-
-    if (userAdded) success = true;
   } catch (err) {
     alert(err.message);
   }
   return success;
 };
 export const userLogIn = async (email, password) => {
-  let message = "";
+  let userDetails = {};
   await signInWithEmailAndPassword(auth, email, password)
-    .then((result) => {
-      // if (result) {
-      //   AsyncStorage.setItem("user", result.user);
-      // }
+    .then(async (result) => {
+      console.log(result.user.uid);
+      const r = result.user.uid;
+      const docRef = doc(db, "user-details", r);
+      const docSnap = await getDoc(docRef);
+      console.log(docSnap.data());
+      userDetails = docSnap.data();
     })
     .catch((error) => {
       console.log(error.code);
       if (error.code === "auth/wrong-password") {
-        message = "Check your password again";
+        alert("Check your password again");
       } else {
-        message = error.errorMsg;
+        alert(error.errorMsg);
       }
     });
-  return message;
+  return userDetails;
 };
 
 export const validateUserEmail = async (email) => {

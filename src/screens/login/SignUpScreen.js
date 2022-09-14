@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, KeyboardAvoidingView, Keyboard, ScrollView } from "react-native";
 import { Text, Button, Input, Icon } from "react-native-elements";
 import { register, validateUserEmail } from "../../../firebase";
@@ -6,6 +6,7 @@ import { register, validateUserEmail } from "../../../firebase";
 import { validateSignUp, validateEmail } from "./validations";
 
 import styles, { COLOURS } from "../../styles/elementStyles";
+import UserContext from "../../context/UserContext";
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -20,14 +21,16 @@ const SignUpScreen = ({ navigation }) => {
     confirmPasswordErrorMsg: "",
   });
   const [valid, setValid] = useState(false);
-
+  const { login } = useContext(UserContext);
   const handleError = (input, errorMsg) => {
     setErrorMsg((prevState) => ({ ...prevState, [input]: errorMsg }));
   };
 
   const signUpUser = async () => {
-    const success = await register(email, password, personName, mobileNo);
-    if (success) {
+    const userId = await register(email, password, personName, mobileNo);
+    if (userId !== "") {
+      login(userId, personName);
+
       navigation.navigate("userFlow");
     }
   };

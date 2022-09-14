@@ -15,14 +15,14 @@ const DateScroller = ({ selectedDateChanged }) => {
     setWeek(weekDays);
   }, []);
 
-  const [selectedDateIndex, setSelectedDateIndex] = useState(0);
+  const [selectedDateIndex, setSelectedDateIndex] = useState();
   const [selectedDate, setSelectedDate] = useState("");
   return (
     <SafeAreaView forceInset={{ top: "always" }}>
       <View
         style={{
           alignItems: "center",
-          marginTop: 40,
+          marginTop: 20,
         }}
       >
         <FlatList
@@ -99,14 +99,42 @@ const styles = StyleSheet.create({
   },
 });
 
-export const getWeekDays = () => {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+// export const getWeekDays = () => {
+//   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  const final = [];
+//   const final = [];
 
-  for (let i = 0; i < 7; i++) {
-    const today = new Date();
-    const date = new Date(today.setDate(today.getDate() + i));
+//   for (let i = 0; i < 7; i++) {
+//     const today = new Date();
+//     const date = new Date(today.setDate(today.getDate() + i));
+//     const dateofWeek = date.getDate();
+//     const dayOfWeek = days[date.getDay()];
+
+//     final.push({ date, dateofWeek, dayOfWeek });
+//   }
+
+//   return final;
+// };
+
+const getWeekDays = () => {
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+
+  let final = [];
+  //   const m = new Date();
+  //   m.setDate(m.getDate() + 7);
+  const curr = new Date();
+
+  let diff = curr.getDay();
+
+  if (curr.getDay() === 6 || curr.getDay() === 7) {
+    diff = 7 - curr.getDay() - 2;
+  }
+
+  for (let i = 1; i <= 5; i++) {
+    const today = new Date(curr);
+
+    const date = new Date(today.setDate(today.getDate() - diff + i));
+    // const date = new Date(today.setDate(today.getDate() + i));
     const dateofWeek = date.getDate();
     const dayOfWeek = days[date.getDay()];
 

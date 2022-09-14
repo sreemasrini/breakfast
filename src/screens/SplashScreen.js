@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { View, Text } from "react-native";
 import { isUserLoggedIn } from "../../firebase";
 import UserContext from "../context/UserContext";
+import { COLOURS } from "../styles/elementStyles";
 import { getAllItemsInMenu } from "../utils/utils";
 
 export default SplashScreen = ({ navigation }) => {
@@ -28,7 +29,7 @@ export default SplashScreen = ({ navigation }) => {
     }, 1000);
   };
   return (
-    <View style={{ backgroundColor: "red", flex: 1 }}>
+    <View style={{ backgroundColor: COLOURS.oliveGreen, flex: 1 }}>
       <Text>Hello</Text>
     </View>
   );

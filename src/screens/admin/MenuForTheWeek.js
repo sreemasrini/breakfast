@@ -1,71 +1,124 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Button } from "react-native";
-import styles from "../../styles/elementStyles";
-import MenuPicker from "../../components/common/MenuPicker";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  Switch,
+  StyleSheet,
+} from "react-native";
+import commonStyles, { COLOURS } from "../../styles/elementStyles";
+//import MenuPicker from "../../components/common/MenuPicker";
+import DateScroller from "../../components/users/DateScroller";
+import UserContext from "../../context/UserContext";
+import DailyMenuList from "../../components/common/DailyMenuList";
+import { addItemsForTheDay } from "../../utils/utils";
+
+import { ScrollView } from "react-native";
 
 const MenuForTheWeek = () => {
-  const [week, setWeek] = useState([]);
-  const [selectedItem, setSelectedItem] = useState("");
+  const [isHoliday, setHoliday] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
 
-  useEffect(() => {
-    const weekDays = getDaysInTheWeek();
+  const { menuItems } = useContext(UserContext);
 
-    const newValue = weekDays.map((r) => ({
-      dayOfWeek: r,
-      menuItem: "",
-    }));
+  const getListWithItemNames = (items, category) => {
+    return items.map((r) => {
+      const item = menuItems.find((s) => s.id === r);
+      return { id: item.id, name: item.name, category: category };
+    });
+  };
 
-    setWeek(newValue);
-    console.log("new");
-    console.log(week);
-  }, []);
+  const addMenuForTheDay = async (item) => {
+    const breakfastList = getListWithItemNames(
+      item[0].selectedBreakfastItems,
+      1
+    );
+    const lunchList = getListWithItemNames(item[0].selectedLunchItems, 2);
+    const snacksList = getListWithItemNames(item[0].selectedSnackItems, 3);
+    const itemsForTheDay = [...breakfastList, ...lunchList, ...snacksList];
+    const formattedDate =
+      new Date(selectedDate).getDate() +
+      "-" +
+      (new Date(selectedDate).getMonth() + 1);
+
+    await addItemsForTheDay(formattedDate, itemsForTheDay);
+  };
   return (
-    <View style={styles.pageAlign}>
-      <Text>Menu for the week</Text>
-      {week.map((r, index) => {
-        return (
+    <ScrollView
+      style={{
+        margin: 5,
+      }}
+    >
+      <DateScroller
+        selectedDateChanged={(item) => {
+          setSelectedDate(item);
+        }}
+      ></DateScroller>
+      {selectedDate != "" ? (
+        <View>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              alignContent: "stretch",
+              justifyContent: "flex-end",
+              marginTop: 10,
             }}
           >
-            <Text>{r.dayOfWeek.toDateString()}</Text>
-            <MenuPicker
-              onSelectedItemChange={(selectedItem) => {
-                setWeek((week.dayOfWeek[index] = selectedItem));
+            <Text
+              style={{
+                fontSize: 16,
+                margin: 30,
               }}
-            ></MenuPicker>
+            >
+              Holiday:
+            </Text>
+            <Switch
+              value={false}
+              value={isHoliday}
+              onValueChange={() => {
+                setHoliday(!isHoliday);
+              }}
+            />
           </View>
-        );
-      })}
-
-      <Text>{selectedItem}</Text>
-    </View>
+          {!isHoliday ? (
+            <DailyMenuList
+              refresh={selectedDate}
+              onMenuListAdded={(item) => {
+                addMenuForTheDay(item);
+              }}
+            />
+          ) : null}
+        </View>
+      ) : (
+        <View>
+          <Text style={{ fontSize: 20 }}>Select a date</Text>
+        </View>
+      )}
+    </ScrollView>
   );
 };
-const getDaysInTheWeek = () => {
-  let week = [];
-  //   const m = new Date();
-  //   m.setDate(m.getDate() + 7);
-  const curr = new Date();
 
-  let diff = curr.getDay();
-
-  if (curr.getDay() === 6 || curr.getDay() === 7) {
-    diff = 7 - curr.getDay() - 2;
-  }
-
-  for (let i = 1; i <= 5; i++) {
-    const today = new Date(curr);
-
-    let day = new Date(today.setDate(today.getDate() - diff + i));
-
-    week.push(day);
-  }
-
-  return week;
-};
+const styles = StyleSheet.create({
+  item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin: 2,
+    padding: 5,
+  },
+  selectedStyle: {
+    borderRadius: 12,
+    borderWidth: 2,
+  },
+  textItem: {
+    paddingLeft: 5,
+    flex: 1,
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    color: "black",
+  },
+});
 
 export default MenuForTheWeek;

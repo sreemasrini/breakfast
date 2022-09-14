@@ -37,12 +37,12 @@ const SignInScreen = ({ navigation }) => {
       } else {
         handleError("emailErrorMsg", "");
         setValid(true);
-        console.log("inside if");
-        console.log(formValid);
+        // console.log("inside if");
+        // console.log(formValid);
       }
     }
-    console.log("email");
-    console.log(formValid);
+    // console.log("email");
+    // console.log(formValid);
   };
   const passwordValidation = () => {
     Keyboard.dismiss();
@@ -54,24 +54,24 @@ const SignInScreen = ({ navigation }) => {
       handleError("passwordErrorMsg", "");
       setValid(true);
     }
-    console.log("password");
-    console.log(formValid);
+    // console.log("password");
+    // console.log(formValid);
   };
 
   const signInUser = async () => {
     setValid(true);
-    console.log("here after setting");
-    console.log(formValid);
+    // console.log("here after setting");
+    // console.log(formValid);
     await emailValidation();
     passwordValidation();
-    console.log("signin 2 times");
+    // console.log("signin 2 times");
 
     // if (formValid) {
-    const result = await userLogIn(email, password);
-    if (result === "") {
+    const userDetails = await userLogIn(email, password);
+    if (userDetails !== null) {
+      login(userDetails.uid, userDetails.name);
       navigation.navigate("userFlow");
     } else {
-      handleError("passwordErrorMsg", result);
       setValid(false);
       setPassword("");
     }
