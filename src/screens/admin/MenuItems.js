@@ -6,12 +6,13 @@ import { View, Text, Button, FlatList, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import UserContext from "../../context/UserContext";
+import ItemsContext from "../../context/ItemsContext";
 import { COLOURS } from "../../styles/elementStyles";
 
 import { addItemToMenu, getAllItemsInMenu } from "../../utils/utils";
 
 const MenuItems = ({ navigation }) => {
-  const { menuItems, setMenuList } = useContext(UserContext);
+  const { menuItems, setMenuList } = useContext(ItemsContext);
 
   const [addItem, setAddItem] = useState({ name: "", desc: "", category: 1 });
   const getItems = async () => {

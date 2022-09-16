@@ -7,7 +7,6 @@ export const UserProvider = ({ children }) => {
   // id: item.id,
   // name: item.data().name,
   // desc: item.data().description,
-  const [menuItems, setMenuItems] = useState([{}]);
 
   const login = (userId, name) => {
     console.log(name);
@@ -18,19 +17,18 @@ export const UserProvider = ({ children }) => {
     });
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser({ uid: "", userName: "", auth: false });
+    try {
+      await AsyncStorage.setItem("token", null);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const setMenuList = (menuList) => {
-    console.log(menuList);
-    setMenuItems(menuList);
-  };
-
+  //, menuItems, setMenuList
   return (
-    <UserContext.Provider
-      value={{ user, login, logout, menuItems, setMenuList }}
-    >
+    <UserContext.Provider value={{ user, login, logout }}>
       {children}
     </UserContext.Provider>
   );

@@ -14,12 +14,13 @@ import { MultiSelect } from "react-native-element-dropdown";
 import MultiSelectMenuPicker from "./MultiSelectMenuPicker";
 import { ScrollView } from "react-native";
 import UserContext from "../../context/UserContext";
+import ItemsContext from "../../context/ItemsContext";
 const DailyMenuList = ({ refresh, onMenuListAdded }) => {
   const [selectedBreakfastItems, setSelectedBreakfastItems] = useState([]);
   const [selectedLunchItems, setSelectedLunchItems] = useState([]);
 
   const [selectedSnackItems, setSelectedSnackItems] = useState([]);
-  const { menuItems } = useContext(UserContext);
+  const { menuItems } = useContext(ItemsContext);
 
   const areItemsAvailable = (category) => {
     const itemsList = menuItems

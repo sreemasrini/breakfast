@@ -3,6 +3,7 @@ import React, { Component, useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MultiSelect } from "react-native-element-dropdown";
 import UserContext from "../../context/UserContext";
+import ItemsContext from "../../context/ItemsContext";
 
 export default MultiSelectMenuPicker = ({
   refresh,
@@ -12,7 +13,7 @@ export default MultiSelectMenuPicker = ({
   const [items, setItems] = useState([]);
   const [selected, setSelected] = useState([]);
 
-  const { menuItems } = useContext(UserContext);
+  const { menuItems } = useContext(ItemsContext);
 
   const setItemsForCategory = (category) => {
     const itemsList = menuItems

@@ -12,17 +12,16 @@ import {
   where,
   getDocs,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import React, { useContext } from "react";
 import UserContext from "../context/UserContext";
 
 export const getMenuForTheDay = async (date, menuItems) => {
-  const day = new Date(date).getDate() + "-" + (new Date(date).getMonth() + 1);
-  // console.log("menu");
-  // console.log(menuItems);
-  console.log(day);
-  const docRef = doc(db, "weekly-menu", day);
+  // const day = new Date(date).getDate() + "-" + (new Date(date).getMonth() + 1);
+
+  const docRef = doc(db, "weekly-menu", date);
   const docSnap = await getDoc(docRef);
   const itemsForTheDay = [];
 
@@ -41,9 +40,7 @@ export const getMenuForTheDay = async (date, menuItems) => {
   return itemsForTheDay;
 };
 
-export const getItemsOrderedByUserForTheDay = async () => {
-  const date = "12-9";
-  const userId = "LS1";
+export const getItemsOrderedByUserForTheDay = async (date, userId) => {
   const q = query(
     collection(db, "order-details"),
     where("date", "==", date),
@@ -51,8 +48,13 @@ export const getItemsOrderedByUserForTheDay = async () => {
   );
 
   const querySnapshot = await getDocs(q);
-
-  return querySnapshot.empty ? {} : querySnapshot.docs[0].data().items;
+  // console.log(querySnapshot.docs[0].data().items);
+  return querySnapshot.empty
+    ? { id: "", items: [] }
+    : {
+        id: querySnapshot.docs[0].id,
+        items: querySnapshot.docs[0].data().items,
+      };
 
   // querySnapshot.forEach((doc) => {
   //   // doc.data() is never undefined for query doc snapshots
@@ -118,15 +120,31 @@ export const addItemsForTheDay = async (date, items) => {
   return success;
 };
 
-export const itemsAddedForUser = async (user, items, date) => {
-  console.log(user, items, date);
-  const docRef = await addDoc(collection(db, "order-details"), {
-    date: date,
-    user: {
-      id: user.uid,
-      name: user.userName,
-    },
-    items: items,
-  });
-  console.log("Document written with ID: ", docRef.id);
+export const itemsAddedForUser = async (id, user, items, date) => {
+  //console.log(user, items, date, id);
+  if (id === "") {
+    const docRef = await addDoc(collection(db, "order-details"), {
+      date: date,
+      user: {
+        id: user.uid,
+        name: user.userName,
+      },
+      items: items,
+    });
+
+    console.log("Document written with ID: ", docRef.id);
+  } else {
+    // const ref = doc(db, "order-details", id);
+    // const doc = await updateDoc(ref, {
+    //   items: items,
+    // });
+
+    const ref = doc(db, "order-details", id);
+
+    // Set the "capital" field of the city 'DC'
+    await updateDoc(ref, {
+      items: items,
+    });
+    console.log("ref" + ref);
+  }
 };

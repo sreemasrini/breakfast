@@ -7,6 +7,7 @@ import { auth, validateUserEmail, userLogIn } from "../../../firebase";
 
 import { validateEmail } from "./validations";
 import UserContext from "../../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -60,24 +61,25 @@ const SignInScreen = ({ navigation }) => {
 
   const signInUser = async () => {
     setValid(true);
-    // console.log("here after setting");
-    // console.log(formValid);
+
     await emailValidation();
     passwordValidation();
-    // console.log("signin 2 times");
 
-    // if (formValid) {
     const userDetails = await userLogIn(email, password);
     if (userDetails !== null) {
       login(userDetails.uid, userDetails.name);
+      const token = { id: userDetails.uid, name: userDetails.name };
+      try {
+        await AsyncStorage.setItem("token", JSON.stringify(token));
+      } catch (e) {
+        console.log(e);
+      }
+
       navigation.navigate("userFlow");
     } else {
       setValid(false);
       setPassword("");
     }
-    // } else {
-    //   setPassword("");
-    // }
   };
   return (
     <View style={[styles.pageAlign, { marginBottom: 50 }]}>

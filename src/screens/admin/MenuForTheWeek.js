@@ -12,7 +12,7 @@ import commonStyles, { COLOURS } from "../../styles/elementStyles";
 import DateScroller from "../../components/users/DateScroller";
 import UserContext from "../../context/UserContext";
 import DailyMenuList from "../../components/common/DailyMenuList";
-import { addItemsForTheDay } from "../../utils/utils";
+import { addItemsForTheDay, getFormattedDate } from "../../utils/utils";
 
 import { ScrollView } from "react-native";
 
@@ -37,10 +37,7 @@ const MenuForTheWeek = () => {
     const lunchList = getListWithItemNames(item[0].selectedLunchItems, 2);
     const snacksList = getListWithItemNames(item[0].selectedSnackItems, 3);
     const itemsForTheDay = [...breakfastList, ...lunchList, ...snacksList];
-    const formattedDate =
-      new Date(selectedDate).getDate() +
-      "-" +
-      (new Date(selectedDate).getMonth() + 1);
+    const formattedDate = getFormattedDate(selectedDate);
 
     await addItemsForTheDay(formattedDate, itemsForTheDay);
   };

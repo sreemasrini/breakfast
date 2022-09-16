@@ -7,63 +7,29 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { COLOURS } from "../../styles/elementStyles";
 import ItemCard from "./ItemCard";
-import {
-  getMenuForTheDay,
-  getItemsOrderedByUserForTheDay,
-} from "../../utils/utils";
-import commonStyles, { COLOURS } from "../../styles/elementStyles";
-import UserContext from "../../context/UserContext";
 
-const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
-  const [menuList, setMenuList] = useState([]);
-  const [breakfastList, setBreakfastList] = useState([]);
-  const [lunchList, setLunchList] = useState([]);
-
-  const [snacksList, setSnacksList] = useState([]);
-  //const [isHoliday, setIsHoliday] = useState(false);
-  const { menuItems } = useContext(UserContext);
+const ItemCardList = ({ itemsList, onItemsAddedForDay }) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [cancelledItems, setCancelledItems] = useState([]);
-  const setData = async () => {
-    console.log(selectedDate);
-    const itemsForDay = await getMenuForTheDay(selectedDate, menuItems);
-    return itemsForDay;
-  };
 
-  const setAlreadyOrderedItems = async () => {
-    const itemsOrdered = await getItemsOrderedByUserForTheDay();
-    console.log(itemsOrdered);
-    if (!itemsOrdered.empty) {
-      itemsOrdered.forEach((r) => {
-        const item = menuList.findIndex((n) => n.id === r.id);
-        if (item !== -1) {
-          const tempArray = [...menuList];
-          tempArray[item] = {
-            ...tempArray[item],
-            qty: r.qty,
-          };
-          setMenuList(tempArray);
-          setSelectedItems([...selectedItems, { r }]);
-        } else {
-          setCancelledItems([...cancelledItems, { r }]);
-        }
-      });
+  useEffect(() => {
+    console.log(itemsList);
+    if (itemsList.length > 0) {
+      const selected = itemsList.filter((r) => r.qty > 0);
+      setSelectedItems([...selected]);
     }
-  };
-
+  }, [itemsList]);
   const addItem = (item, count, category) => {
+    // console.log(selectedItems);
     const selectedItemIndex = selectedItems.findIndex((r) => r.id === item.id);
     if (selectedItemIndex !== -1) {
       const tempArray = [...selectedItems];
-      if (count === 0) {
-        tempArray.splice(selectedItemIndex, 1);
-      } else {
-        tempArray[selectedItemIndex] = {
-          ...tempArray[selectedItemIndex],
-          qty: count,
-        };
-      }
+
+      tempArray[selectedItemIndex] = {
+        ...tempArray[selectedItemIndex],
+        qty: count,
+      };
       setSelectedItems(tempArray);
     } else {
       setSelectedItems([
@@ -72,50 +38,25 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
       ]);
     }
   };
-  const dummy = async () => {
-    const items = await setData();
-    console.log("menuList");
-    console.log(items);
-    setMenuList(items);
-  };
 
-  useEffect(() => {
-    setSelectedItems([]);
-    //setMenuList([]);
-    dummy();
-    // setMenuList(menu);
-    console.log("dumm");
-    console.log(menuList);
-    //setAlreadyOrderedItems();
-    // splitData();
-  }, [selectedDate]);
-
-  const splitData = () => {
-    setBreakfastList(getListbyCategory(1));
-    setLunchList(getListbyCategory(2));
-    setSnacksList(getListbyCategory(3));
-    //  console.log(breakfastList);
-  };
   const getListbyCategory = (category) => {
-    // console.log("Hello");
-    // console.log(menuList[0]);
-    return menuList.filter((r) => r.category == category);
+    return itemsList.filter((r) => r.category == category);
   };
 
   return (
     <SafeAreaView forceInset={{ top: "always" }}>
       <View style={styles.containerStyle}>
-        {menuList.length > 0 ? (
+        {itemsList.length === 0 ? (
           <View>
             <Text style={{ fontSize: 26, fontStyle: "italic" }}>
-              Bring your own food or stay hungry!!!
+              Sorry, We are closed for the day.
             </Text>
           </View>
         ) : (
           <View>
             <View>
               <View>
-                {breakfastList.length > 0 ? (
+                {getListbyCategory(1).length > 0 ? (
                   <View>
                     <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                       Breakfast
@@ -124,13 +65,13 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
                       key={(item) => {
                         item.id;
                       }}
-                      data={breakfastList}
+                      data={getListbyCategory(1)}
                       renderItem={({ item }) => {
                         return (
                           <View>
                             <ItemCard
                               item={item}
-                              orderCount={0}
+                              orderCount={item.qty}
                               onCountChanged={(count) => {
                                 addItem(item, count, 1);
                               }}
@@ -143,7 +84,7 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
                 ) : null}
               </View>
               <View>
-                {lunchList.length > 0 ? (
+                {getListbyCategory(2).length > 0 ? (
                   <View>
                     <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                       Lunch
@@ -152,13 +93,13 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
                       key={(item) => {
                         item.id;
                       }}
-                      data={lunchList}
+                      data={getListbyCategory(2)}
                       renderItem={({ item }) => {
                         return (
                           <View>
                             <ItemCard
                               item={item}
-                              orderCount={0}
+                              orderCount={item.qty}
                               onCountChanged={(count) => {
                                 addItem(item, count, 2);
                               }}
@@ -171,7 +112,7 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
                 ) : null}
               </View>
               <View>
-                {snacksList.length > 0 ? (
+                {getListbyCategory(3).length > 0 ? (
                   <View>
                     <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                       Snacks
@@ -180,13 +121,13 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
                       key={(item) => {
                         item.id;
                       }}
-                      data={snacksList}
+                      data={getListbyCategory(3)}
                       renderItem={({ item }) => {
                         return (
                           <View>
                             <ItemCard
                               item={item}
-                              orderCount={0}
+                              orderCount={item.qty}
                               onCountChanged={(count) => {
                                 addItem(item, count, 3);
                               }}
@@ -203,27 +144,27 @@ const ItemCardList = ({ selectedDate, onItemsAddedForDay }) => {
               style={{
                 margin: 30,
 
-                alignItems: "center",
+                alignItems: "flex-end",
+                justifyContent: "flex-end",
               }}
             >
               <TouchableOpacity
                 onPress={() => {
-                  console.log("selectedItems");
-                  console.log(selectedItems);
                   onItemsAddedForDay(selectedItems);
                 }}
                 style={{
                   height: 40,
                   width: 120,
-
+                  backgroundColor: COLOURS.oliveGreen,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 14,
                 }}
+                //disabled={selectedItems.length === 0}
               >
                 <Text
                   style={{
-                    color: "black",
+                    color: "white",
                     fontSize: 18,
                   }}
                 >

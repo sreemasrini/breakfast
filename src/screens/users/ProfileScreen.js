@@ -27,7 +27,14 @@ const ProfileScreen = ({ navigation }) => {
           navigation.navigate("OrderDetails");
         }}
       >
-        <Text style={ProfileScreenStyles.itemStyle}> View Orders</Text>
+        <Text style={ProfileScreenStyles.itemStyle}> Order Details</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("AdminScreen");
+        }}
+      >
+        <Text style={ProfileScreenStyles.itemStyle}> Admin</Text>
       </Pressable>
       <Pressable
         onPress={() => {

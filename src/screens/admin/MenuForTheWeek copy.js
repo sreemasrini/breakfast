@@ -3,11 +3,12 @@ import { View, Text, Button, TouchableOpacity } from "react-native";
 import commonStyles, { COLOURS } from "../../styles/elementStyles";
 //import MenuPicker from "../../components/common/MenuPicker";
 import UserContext from "../../context/UserContext";
+import ItemsContext from "../../context/ItemsContext";
 
 const MenuForTheWeek = () => {
   const [menuForWeek, setMenuForWeek] = useState([]);
 
-  const { menuItems } = useContext(UserContext);
+  const { menuItems } = useContext(ItemsContext);
   const [menu, setMenu] = useState([{ id: "", name: "" }]);
 
   useEffect(() => {

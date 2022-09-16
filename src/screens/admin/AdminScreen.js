@@ -1,12 +1,14 @@
 import React, { useContext, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { View, Text, Button } from "react-native";
+import { OrderList } from "../../components/common/OrderList";
+import ItemsContext from "../../context/ItemsContext";
 import UserContext from "../../context/UserContext";
 import styles, { COLOURS } from "../../styles/elementStyles";
 import { getAllItemsInMenu } from "../../utils/utils";
 
 const AdminScreen = ({ navigation }) => {
-  const { setMenuList } = useContext(UserContext);
+  const { setMenuList } = useContext(ItemsContext);
   const getItems = async () => {
     const list = await getAllItemsInMenu();
 
@@ -17,7 +19,7 @@ const AdminScreen = ({ navigation }) => {
     getItems();
   }, []);
   return (
-    <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+    <View style={{ alignItems: "center", flex: 1, marginTop: 30 }}>
       <View style={{ margin: 20 }}>
         <TouchableOpacity
           onPress={() => {
@@ -67,7 +69,7 @@ const AdminScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text>Total orders for tomorrow : 32</Text>
+      <OrderList></OrderList>
     </View>
   );
 };

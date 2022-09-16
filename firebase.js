@@ -41,8 +41,8 @@ export const register = async (email, password, username, mobileNo) => {
     //console.log(user);
     const q = query(collection(db, "user-details"));
     const docs = await getDocs(q);
-    console.log(docs.length());
-    const userId = docs.length() === 0 ? "LS1" : "LS" + (docs.length() + 1);
+    console.log(docs.size);
+    const userId = docs.size === 0 ? "LS1" : "LS" + (docs.size + 1);
 
     await setDoc(doc(db, "user-details", user.uid), {
       uid: userId,

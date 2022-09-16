@@ -7,6 +7,7 @@ import { validateSignUp, validateEmail } from "./validations";
 
 import styles, { COLOURS } from "../../styles/elementStyles";
 import UserContext from "../../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -30,6 +31,13 @@ const SignUpScreen = ({ navigation }) => {
     const userId = await register(email, password, personName, mobileNo);
     if (userId !== "") {
       login(userId, personName);
+      const token = { id: userId, name: personName };
+
+      try {
+        await AsyncStorage.setItem("token", JSON.stringify(token));
+      } catch (e) {
+        console.log(e);
+      }
 
       navigation.navigate("userFlow");
     }

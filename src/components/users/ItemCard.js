@@ -12,6 +12,9 @@ import { Icon } from "react-native-elements";
 
 const ItemCard = ({ item, orderCount, onCountChanged }) => {
   const [count, setCount] = useState(orderCount);
+  useEffect(() => {
+    setCount(orderCount);
+  }, [item]);
 
   return (
     <SafeAreaView forceInset={{ top: "always" }}>

@@ -55,28 +55,41 @@ const OrderBook = createMaterialTopTabNavigator(
   }
 );
 
-const ProfileDetails = createStackNavigator({
-  ProfileScreen: ProfileScreen,
-  OrderDetails: OrderBook,
-  AccountDetails: AccountDetailsScreen,
-});
+const adminFlow = createStackNavigator(
+  {
+    AdminScreen: { screen: AdminScreen, navigationOptions: { title: "" } },
+    MenuForTheWeek: {
+      screen: MenuForTheWeek,
+      navigationOptions: {
+        title: "Menu for the week",
+      },
+    },
+    MenuItems: {
+      screen: MenuItems,
+      navigationOptions: {
+        title: "Menu Item",
+      },
+    },
+  },
+  {
+    headerMode: "none",
+  }
+);
+
+const ProfileDetails = createStackNavigator(
+  {
+    ProfileScreen: ProfileScreen,
+    OrderDetails: OrderBook,
+    Admin: adminFlow,
+    AccountDetails: AccountDetailsScreen,
+  },
+  {
+    initialRouteName: "ProfileScreen",
+    resetOnBlur: true,
+  }
+);
 
 const navigator = createSwitchNavigator({
-  // adminFlow: createStackNavigator({
-  //   AdminScreen: { screen: AdminScreen, navigationOptions: { title: "" } },
-  //   MenuForTheWeek: {
-  //     screen: MenuForTheWeek,
-  //     navigationOptions: {
-  //       title: "Menu for the week",
-  //     },
-  //   },
-  //   MenuItems: {
-  //     screen: MenuItems,
-  //     navigationOptions: {
-  //       title: "Menu Item",
-  //     },
-  //   },
-  // }),
   SplashScreen: SplashScreen,
   loginFlow: createStackNavigator(
     {
