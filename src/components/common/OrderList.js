@@ -4,6 +4,7 @@ import { View, Text } from "react-native";
 import { CATEGORYLIST } from "../../../assets/constants/constants";
 import ItemsContext from "../../context/ItemsContext";
 import {
+  getFormattedDate,
   getItemsForDay,
   getTotalOrderListForTheDay,
 } from "../../utils/itemutils";
@@ -21,8 +22,11 @@ export const OrderList = () => {
     ).toDateString();
     setNextDay(nextday);
 
-    const orderList = await getTotalOrderListForTheDay("Mon Sep 16 2022");
-    const menuForDay = await getMenuForTheDay("16-9", menuItems);
+    const orderList = await getTotalOrderListForTheDay(nextday);
+    const menuForDay = await getMenuForTheDay(
+      getFormattedDate(nextday),
+      menuItems
+    );
     const itemsList = orderList.flatMap((r) => r.items);
     const totalItemsForTheDay = getItemsForDay(menuForDay, itemsList);
     setTotalItems(totalItemsForTheDay);

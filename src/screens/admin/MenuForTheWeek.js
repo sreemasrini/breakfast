@@ -12,15 +12,17 @@ import commonStyles, { COLOURS } from "../../styles/elementStyles";
 import DateScroller from "../../components/users/DateScroller";
 import UserContext from "../../context/UserContext";
 import DailyMenuList from "../../components/common/DailyMenuList";
-import { addItemsForTheDay, getFormattedDate } from "../../utils/utils";
+import { addItemsForTheDay } from "../../utils/utils";
 
 import { ScrollView } from "react-native";
+import ItemsContext from "../../context/ItemsContext";
+import { getFormattedDate } from "../../utils/itemutils";
 
 const MenuForTheWeek = () => {
   const [isHoliday, setHoliday] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
 
-  const { menuItems } = useContext(UserContext);
+  const { menuItems } = useContext(ItemsContext);
 
   const getListWithItemNames = (items, category) => {
     return items.map((r) => {

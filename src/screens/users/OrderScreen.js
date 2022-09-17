@@ -33,7 +33,7 @@ const OrderScreen = () => {
   const addItemsForUser = (items) => {
     const formattedDate = getFormattedDate(date);
 
-    itemsAddedForUser(id, user, items, formattedDate);
+    itemsAddedForUser(id, user, items, date);
   };
 
   const validateDate = (selectedDate) => {
@@ -81,7 +81,7 @@ const OrderScreen = () => {
         </View>
       ) : (
         <View>
-          {errorMsg !== "" ? (
+          {errorMsg === "" ? (
             <View>
               <ItemCardList
                 selectedDate={date}

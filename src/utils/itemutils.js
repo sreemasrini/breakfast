@@ -79,3 +79,34 @@ export const getTotalOrderListForTheDay = async (date) => {
   //console.log(list);
   return list;
 };
+
+export const getActiveOrdersForUser = async (userId) => {
+  // const formattedDate = getFormattedDate(date);
+
+  // console.log(formattedDate);
+  console.log(userId);
+  const q = query(
+    collection(db, "order-details"),
+    where("user.id", "==", userId),
+    where("timestamp", ">", new Date())
+  );
+
+  const querySnapshot = await getDocs(q);
+  // console.log(querySnapshot.docs[0].data().items);
+  let list = [];
+  querySnapshot.forEach((item) => {
+    //console.log(item.data());
+    list.push({ ...item.data(), oid: item.id });
+  });
+  console.log("List");
+  console.log(list);
+  return list;
+};
+
+export const updateActiveOrder = async (docId, items) => {
+  const ref = doc(db, "order-details", docId);
+
+  await updateDoc(ref, {
+    items: items,
+  });
+};

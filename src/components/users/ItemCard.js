@@ -14,6 +14,7 @@ const ItemCard = ({ item, orderCount, onCountChanged }) => {
   const [count, setCount] = useState(orderCount);
   useEffect(() => {
     setCount(orderCount);
+    console.log(count);
   }, [item]);
 
   return (

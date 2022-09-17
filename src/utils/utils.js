@@ -13,10 +13,12 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import React, { useContext } from "react";
 import UserContext from "../context/UserContext";
+import { getFormattedDate } from "./itemutils";
 
 export const getMenuForTheDay = async (date, menuItems) => {
   // const day = new Date(date).getDate() + "-" + (new Date(date).getMonth() + 1);
@@ -122,23 +124,21 @@ export const addItemsForTheDay = async (date, items) => {
 
 export const itemsAddedForUser = async (id, user, items, date) => {
   //console.log(user, items, date, id);
+  const formattedDate = getFormattedDate(date);
+
   if (id === "") {
     const docRef = await addDoc(collection(db, "order-details"), {
-      date: date,
+      date: formattedDate,
       user: {
         id: user.uid,
         name: user.userName,
       },
       items: items,
+      timestamp: Timestamp.fromDate(new Date(date)),
     });
 
     console.log("Document written with ID: ", docRef.id);
   } else {
-    // const ref = doc(db, "order-details", id);
-    // const doc = await updateDoc(ref, {
-    //   items: items,
-    // });
-
     const ref = doc(db, "order-details", id);
 
     // Set the "capital" field of the city 'DC'

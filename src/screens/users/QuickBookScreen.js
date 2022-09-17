@@ -8,7 +8,11 @@ import ItemCardList from "../../components/users/ItemCardList";
 import ItemsContext from "../../context/ItemsContext";
 import UserContext from "../../context/UserContext";
 import commonStyles from "../../styles/elementStyles";
-import { getFormattedDate, getItemsForDay } from "../../utils/itemutils";
+import {
+  getActiveOrdersForUser,
+  getFormattedDate,
+  getItemsForDay,
+} from "../../utils/itemutils";
 import { itemsAddedForUser } from "../../utils/utils";
 
 function QuickBookScreen() {
@@ -38,6 +42,7 @@ function QuickBookScreen() {
 
   useEffect(() => {
     setData();
+    getActiveOrdersForUser(new Date());
   }, []);
 
   const addItemsForUser = (items) => {
