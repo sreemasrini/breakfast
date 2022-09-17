@@ -13,6 +13,7 @@ import {
   updateActiveOrder,
 } from "../../utils/itemutils";
 import UserContext from "../../context/UserContext";
+import { ToastAndroid } from "react-native";
 
 const ActiveOrders = () => {
   const { user } = useContext(UserContext);
@@ -37,7 +38,15 @@ const ActiveOrders = () => {
         ...updatedItems[selectedindex],
         qty: count,
       };
-      await updateActiveOrder(oid, updatedItems);
+      const result = await updateActiveOrder(oid, updatedItems);
+
+      if (true) {
+        ToastAndroid.showWithGravity(
+          "Order Updated",
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
+      }
     }
   };
   useEffect(() => {
@@ -65,7 +74,7 @@ const ActiveOrders = () => {
                   </Text>
                   <View>
                     <FlatList
-                      data={item.items}
+                      data={item.items.filter((r) => r.qty > 0)}
                       key={(item) => {
                         item.id;
                       }}

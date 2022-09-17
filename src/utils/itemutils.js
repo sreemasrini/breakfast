@@ -106,7 +106,30 @@ export const getActiveOrdersForUser = async (userId) => {
 export const updateActiveOrder = async (docId, items) => {
   const ref = doc(db, "order-details", docId);
 
-  await updateDoc(ref, {
+  updateDoc(ref, {
     items: items,
+  }).then(() => {
+    return true;
   });
+  return false;
+};
+
+export const getPastOrdersForUser = async (userId) => {
+  console.log(userId);
+  const q = query(
+    collection(db, "order-details"),
+    where("user.id", "==", userId),
+    where("timestamp", "<=", new Date())
+  );
+
+  const querySnapshot = await getDocs(q);
+  // console.log(querySnapshot.docs[0].data().items);
+  let list = [];
+  querySnapshot.forEach((item) => {
+    //console.log(item.data());
+    list.push(item.data());
+  });
+  console.log("List");
+  console.log(list);
+  return list;
 };

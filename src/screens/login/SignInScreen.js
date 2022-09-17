@@ -60,7 +60,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   const signInUser = async () => {
-    setValid(true);
+    // setValid(true);
 
     await emailValidation();
     passwordValidation();
@@ -69,6 +69,7 @@ const SignInScreen = ({ navigation }) => {
     if (userDetails !== null) {
       login(userDetails.uid, userDetails.name);
       const token = { id: userDetails.uid, name: userDetails.name };
+      setValid(true);
       try {
         await AsyncStorage.setItem("token", JSON.stringify(token));
       } catch (e) {

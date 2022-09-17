@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Text, Button, Input, Icon } from "react-native-elements";
+import UserContext from "../../context/UserContext";
 
 import styles from "../../styles/elementStyles";
 
 const AccountDetailsScreen = () => {
+  const { user } = useContext(UserContext);
   return (
     <View style={styles1.container}>
-      <Text>Account Details</Text>
+      <Text style={styles.headerText}>Name: {user.userName}</Text>
+      <Text style={styles.headerText}>Phone Number: </Text>
+      <Text style={styles.headerText}>E-Mail Id</Text>
     </View>
   );
 };
