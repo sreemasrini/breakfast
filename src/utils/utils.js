@@ -18,7 +18,6 @@ import {
 import { db } from "../../firebase";
 import React, { useContext } from "react";
 import UserContext from "../context/UserContext";
-import { getFormattedDate } from "./itemutils";
 
 export const getMenuForTheDay = async (date, menuItems) => {
   // const day = new Date(date).getDate() + "-" + (new Date(date).getMonth() + 1);
@@ -87,7 +86,7 @@ export const addItemToMenu = async (name, desc, category, length) => {
   let success = false;
 
   try {
-    const docId = "LS" + (length + 1);
+    const docId = "ITEM" + (length + 1);
     console.log("docId=" + docId);
     const itemAdded = await setDoc(doc(db, "menu-list", docId), {
       name: name,
@@ -120,6 +119,9 @@ export const addItemsForTheDay = async (date, items) => {
     alert(err.message);
   }
   return success;
+};
+const getFormattedDate = (date) => {
+  return new Date(date).getDate() + "-" + (new Date(date).getMonth() + 1);
 };
 
 export const itemsAddedForUser = async (id, user, items, date) => {

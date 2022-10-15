@@ -52,34 +52,40 @@ export const OrderList = () => {
   return (
     <View>
       <Text style={{ fontSize: 22 }}>Total orders for {nextDay}</Text>
-      <View style={{ margin: 15 }}>
-        <FlatList
-          key={(item) => {
-            item.id;
-          }}
-          data={totalItems}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "stretch",
+      {totalItems.length > 0 ? (
+        <View style={{ margin: 15 }}>
+          <FlatList
+            key={(item) => {
+              item.id;
+            }}
+            data={totalItems}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "stretch",
 
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <Text style={styles.titleStyle}>
-                  {CATEGORYLIST.filter((r) => r.id == item.category).map(
-                    (r) => r.name
-                  )}
-                </Text>
-                <Text style={styles.titleStyle}>{item.name}</Text>
-                <Text style={styles.titleStyle}>{item.qty}</Text>
-              </View>
-            );
-          }}
-        ></FlatList>
-      </View>
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <Text style={styles.titleStyle}>
+                    {CATEGORYLIST.filter((r) => r.id == item.category).map(
+                      (r) => r.name
+                    )}
+                  </Text>
+                  <Text style={styles.titleStyle}>{item.name}</Text>
+                  <Text style={styles.titleStyle}>{item.qty}</Text>
+                </View>
+              );
+            }}
+          ></FlatList>
+        </View>
+      ) : (
+        <View>
+          <Text>There are no orders for the tomorrow</Text>
+        </View>
+      )}
     </View>
   );
 };

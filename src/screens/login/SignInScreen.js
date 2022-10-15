@@ -65,8 +65,9 @@ const SignInScreen = ({ navigation }) => {
     await emailValidation();
     passwordValidation();
 
-    const userDetails = await userLogIn(email, password);
-    if (userDetails !== null) {
+    const details = await userLogIn(email, password);
+    const userDetails = details.userDetails;
+    if (details.success) {
       login(userDetails.uid, userDetails.name);
       const token = { id: userDetails.uid, name: userDetails.name };
       setValid(true);

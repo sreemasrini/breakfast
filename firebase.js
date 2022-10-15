@@ -59,16 +59,20 @@ export const register = async (email, password, username, mobileNo) => {
 };
 export const userLogIn = async (email, password) => {
   let userDetails = {};
+  let success = true;
   await signInWithEmailAndPassword(auth, email, password)
     .then(async (result) => {
       console.log(result.user.uid);
       const r = result.user.uid;
       const docRef = doc(db, "user-details", r);
       const docSnap = await getDoc(docRef);
-      console.log(docSnap.data());
+
       userDetails = docSnap.data();
+
+      success = true;
     })
     .catch((error) => {
+      success = false;
       console.log(error.code);
       if (error.code === "auth/wrong-password") {
         alert("Check your password again");
@@ -76,7 +80,7 @@ export const userLogIn = async (email, password) => {
         alert(error.errorMsg);
       }
     });
-  return userDetails;
+  return { success: success, userDetails: userDetails };
 };
 
 export const validateUserEmail = async (email) => {

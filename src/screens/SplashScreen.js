@@ -37,9 +37,5 @@ export default SplashScreen = ({ navigation }) => {
       console.log(e);
     }
   };
-  return (
-    <View style={{ backgroundColor: COLOURS.oliveGreen, flex: 1 }}>
-      <Text>Hello</Text>
-    </View>
-  );
+  return <View style={{ backgroundColor: COLOURS.oliveGreen, flex: 1 }}></View>;
 };
